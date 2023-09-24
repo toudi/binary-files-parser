@@ -43,6 +43,7 @@ func NewReader(src io.Reader) *BinaryDecoder {
 		codecs: map[reflect.Kind]Decoder{
 			reflect.Uint8:  decodeUint8,
 			reflect.Uint16: decodeUint16,
+			reflect.Bool:   decodeBool,
 		},
 		tagCodecs: map[string]Decoder{
 			"ts":  decodeTimestamp,

@@ -49,7 +49,7 @@ func (d *BinaryDecoder) unpackRecursive(src io.Reader, dst interface{}, structFi
 			bytesRead = 0
 		}
 	case reflect.Array:
-		declaredSize := dstType.Size()
+		declaredSize := dstType.Len()
 		// fmt.Printf("begin to unpack array; declaredSize=%d\n", declaredSize)
 		for i := 0; i < int(declaredSize); i += 1 {
 			if bytesRead, err = d.unpackRecursive(src, dstValue.Index(i).Addr().Interface(), structField, endianess); err != nil {
