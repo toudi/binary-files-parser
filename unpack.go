@@ -38,15 +38,15 @@ func (d *BinaryDecoder) unpackRecursive(src io.Reader, dst interface{}, structFi
 					if err != nil {
 						return -1, fmt.Errorf("unable to unpack field: %v", err)
 					}
+
+					continue
 				}
 			}
 
-			if bytesRead == 0 {
-				if _, err = d.unpackRecursive(src, structField.Addr().Interface(), dstType.Field(i), endianess); err != nil {
-					return -1, fmt.Errorf("unable to unpack struct: %v", err)
-				}
+			if bytesRead, err = d.unpackRecursive(src, structField.Addr().Interface(), dstType.Field(i), endianess); err != nil {
+				return -1, fmt.Errorf("unable to unpack struct: %v", err)
 			}
-			bytesRead = 0
+
 		}
 	case reflect.Array:
 		declaredSize := dstType.Len()
@@ -56,15 +56,13 @@ func (d *BinaryDecoder) unpackRecursive(src io.Reader, dst interface{}, structFi
 				return -1, fmt.Errorf("unable to unpack array at position %d: %v", i, err)
 			}
 		}
-
 	default:
 		decoder, exists := d.codecs[valueType]
 		if !exists {
 			return -1, fmt.Errorf("unsupported value type: %v", valueType)
 		}
-
-		return decoder(src, dstValue, structField, endianess)
+		bytesRead, err = decoder(src, dstValue, structField, endianess)
 	}
 
-	return bytesRead, nil
+	return bytesRead, err
 }

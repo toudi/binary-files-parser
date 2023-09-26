@@ -47,6 +47,7 @@ func NewReader(src io.Reader) *BinaryDecoder {
 		},
 		tagCodecs: map[string]Decoder{
 			"ts":  decodeTimestamp,
+			"uts": decodeUnpackedTimestamp,
 			"p":   decodeString,
 			"r48": decodeReal48,
 		},
