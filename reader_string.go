@@ -42,7 +42,7 @@ func decodeString(src io.Reader, dest reflect.Value, structField reflect.StructF
 		return -1, fmt.Errorf("unable to read source bytes into buffer: %v", err)
 	}
 
-	dest.SetString(string(buffer[1 : bytesToRead+1]))
+	dest.SetString(string(buffer[1 : stringLength+1]))
 
 	return bytesToRead + 1, nil
 }
